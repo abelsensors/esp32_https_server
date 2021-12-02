@@ -3,10 +3,13 @@
 
 #include "Arduino.h"
 
+#if defined(HTTPS_LOGLEVEL) || !defined(__ARDUHAL_LOG_H__) // HTTPS_LOGLEVEL defined or no __ARDUHAL_LOG_H__ - use custom
+
 // 1: Error
 // 2: Error + Warn
 // 3: Error + Warn + Info
 // 4: Error + Warn + Info + Debug
+// 5: Error + Warn + Info + Debug + Verbose
 
 #ifndef HTTPS_LOGLEVEL
   #define HTTPS_LOGLEVEL 3
@@ -41,6 +44,26 @@
 #else
   #define HTTPS_LOGD(...) do {} while (0)
 #endif
+
+#if HTTPS_LOGLEVEL > 4
+  #define HTTPS_LOGV(...) HTTPS_LOGTAG("V");Serial.printf(__VA_ARGS__);Serial.println()
+#else
+  #define HTTPS_LOGV(...) do {} while (0)
+#endif
+
+#else // __ARDUHAL_LOG_H__ - logging and level enabled from Arduino IDF
+
+#ifndef TAG
+  #define TAG "HTTPS"
+#endif // TAG
+
+#define HTTPS_LOGE(...)  log_e(__VA_ARGS__)
+#define HTTPS_LOGW(...)  log_w(__VA_ARGS__)
+#define HTTPS_LOGI(...)  log_i(__VA_ARGS__)
+#define HTTPS_LOGD(...)  log_d(__VA_ARGS__)
+#define HTTPS_LOGV(...)  log_v(__VA_ARGS__)
+
+#endif // HTTPS_LOGLEVEL
 
 // The following lines define limits of the protocol. Exceeding these limits will lead to a 500 error
 

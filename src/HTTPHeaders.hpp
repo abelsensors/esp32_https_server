@@ -2,9 +2,6 @@
 #define SRC_HTTPHEADERS_HPP_
 
 #include <string>
-// Arduino declares it's own min max, incompatible with the stl...
-#undef min
-#undef max
 #include <vector>
 
 #include "HTTPSServerConstants.hpp"

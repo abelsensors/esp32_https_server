@@ -5,8 +5,6 @@
 #include <lwip/def.h>
 
 #include <string>
-#undef min
-#undef max
 #include <iostream>
 #include <streambuf>
 #include <sstream>

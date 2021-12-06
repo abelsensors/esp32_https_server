@@ -4,9 +4,6 @@
 #include <Arduino.h>
 
 #include <string>
-// Arduino declares it's own min max, incompatible with the stl...
-#undef min
-#undef max
 #include <vector>
 #include <utility>
 

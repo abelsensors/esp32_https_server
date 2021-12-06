@@ -9,7 +9,6 @@
 
 // Required for sockets
 #include "lwip/netdb.h"
-#undef read
 #include "lwip/sockets.h"
 #include "lwip/inet.h"
 

@@ -3,8 +3,6 @@
 
 #include <Arduino.h>
 #include <string>
-#undef min
-#undef max
 #include <vector>
 #include "HTTPValidator.hpp"
 

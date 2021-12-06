@@ -9,7 +9,6 @@
 
 // Required for SSL
 #include "openssl/ssl.h"
-#undef read
 
 // Internal includes
 #include "HTTPServer.hpp"

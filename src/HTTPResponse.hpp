@@ -3,13 +3,7 @@
 
 #include <Arduino.h>
 #include <string>
-// Arduino declares it's own min max, incompatible with the stl...
-#undef min
-#undef max
-#undef write
 #include <vector>
-
-#include <openssl/ssl.h>
 
 #include "util.hpp"
 

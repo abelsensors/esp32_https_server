@@ -7,11 +7,9 @@
 
 // Required for SSL
 #include "openssl/ssl.h"
-#undef read
 
 // Required for sockets
 #include "lwip/netdb.h"
-#undef read
 #include "lwip/sockets.h"
 
 #include "HTTPSServerConstants.hpp"

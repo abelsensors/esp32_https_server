@@ -3,6 +3,21 @@
 
 #include <Arduino.h>
 #include <IPAddress.h>
+#ifndef HTTPS_USE_MBEDTLS	// From ServerConstats
+  #include <openssl/ssl.h>
+#else
+  #include <mbedtls/ssl.h>
+  #include <mbedtls/entropy.h>
+  #include <mbedtls/ctr_drbg.h>
+  #include <mbedtls/net_sockets.h>
+  #include <mbedtls/error.h>
+
+#ifdef HTTPS_USE_MBEDTLS_SSL_CACHE
+  #include <mbedtls/ssl_cache.h>
+#endif // SSL_CACHE
+
+#endif // MBEDTLS
+
 
 namespace httpsserver {
 

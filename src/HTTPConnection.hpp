@@ -39,7 +39,7 @@ public:
   HTTPConnection(ResourceResolver * resResolver);
   virtual ~HTTPConnection();
 
-  virtual int initialize(int serverSocketID, HTTPHeaders *defaultHeaders);
+  virtual int initialize(int SocketID, HTTPHeaders *defaultHeaders);
   virtual void closeConnection();
   virtual bool isSecure();
   virtual IPAddress getClientIP();

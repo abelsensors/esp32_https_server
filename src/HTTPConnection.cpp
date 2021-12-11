@@ -25,16 +25,22 @@ HTTPConnection::~HTTPConnection() {
   closeConnection();
 }
 
-/**
- * Initializes the connection from a server socket.
- *
- * The call WILL BLOCK if accept(serverSocketID) blocks. So use select() to check for that in advance.
- */
-int HTTPConnection::initialize(int serverSocketID, HTTPHeaders *defaultHeaders) {
+// Initializes the connection from a socket.
+int HTTPConnection::initialize(int SocketID, HTTPHeaders *defaultHeaders) {
   if (_connectionState == STATE_UNDEFINED) {
     _defaultHeaders = defaultHeaders;
+#ifdef HTTPS_USE_MBEDTLS
+    if ( isSecure() ) {		// call from mbedtls HTTPSConnection - just register the socket, it will be accepted form the caller
+      HTTPS_LOGI("New connection. Socket FID=%d", SocketID);
+      _socket = SocketID;
+      _connectionState = STATE_INITIAL;
+      _httpHeaders = new HTTPHeaders();
+      refreshTimeout();
+      return SocketID;
+    }
+#endif
     _addrLen = sizeof(_sockAddr);
-    _socket = accept(serverSocketID, (struct sockaddr * )&_sockAddr, &_addrLen);
+    _socket = accept(SocketID, (struct sockaddr * )&_sockAddr, &_addrLen);
 
     // Build up SSL Connection context if the socket has been created successfully
     if (_socket >= 0) {
@@ -44,9 +50,9 @@ int HTTPConnection::initialize(int serverSocketID, HTTPHeaders *defaultHeaders) 
       refreshTimeout();
       return _socket;
     }
-     
+
     HTTPS_LOGE("Could not accept() new connection");
-   
+
     _addrLen = 0;
     _connectionState = STATE_ERROR;
     _clientState = CSTATE_ACTIVE;
@@ -55,6 +61,7 @@ int HTTPConnection::initialize(int serverSocketID, HTTPHeaders *defaultHeaders) 
     // variables  etc.
     closeConnection();
   }
+
   // Error: The connection has already been established or could not be established
   return -1;
 }

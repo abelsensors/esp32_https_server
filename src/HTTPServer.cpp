@@ -167,7 +167,13 @@ int HTTPServer::createConnection(int idx) {
 /**
  * This method prepares the tcp server socket
  */
-uint8_t HTTPServer::setupSocket() {
+uint8_t HTTPServer::setupSocket(int SocketID) {
+  if ( SocketID >= 0 ) {	// mbedtls call from HTTPSServer
+     HTTPS_LOGI("Adding Secure Socket %d", SocketID);
+    _socket = SocketID;
+    return 1;
+  }
+
   // (AF_INET = IPv4, SOCK_STREAM = TCP)
   _socket = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -199,7 +205,6 @@ uint8_t HTTPServer::setupSocket() {
     _socket = -1;
     return 0;
   }
- 
 }
 
 void HTTPServer::teardownSocket() {

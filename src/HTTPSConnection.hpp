@@ -6,7 +6,14 @@
 #include <string>
 
 // Required for SSL
-#include "openssl/ssl.h"
+#ifndef HTTPS_USE_MBEDTLS
+  #include <openssl/ssl.h>
+#else
+  #include <mbedtls/ssl.h>
+  #include <mbedtls/net_sockets.h>
+  #include <mbedtls/error.h>
+#endif // MBEDTLS
+
 
 // Required for sockets
 #include "lwip/netdb.h"
@@ -32,7 +39,11 @@ public:
   HTTPSConnection(ResourceResolver * resResolver);
   virtual ~HTTPSConnection();
 
-  virtual int initialize(int serverSocketID, SSL_CTX * sslCtx, HTTPHeaders *defaultHeaders);
+#ifndef HTTPS_USE_MBEDTLS
+  virtual int initialize(int SocketID, SSL_CTX * sslCtx, HTTPHeaders *defaultHeaders);
+#else
+  virtual int initialize(mbedtls_net_context * server_fd, mbedtls_ssl_config * sslCnf, HTTPHeaders *defaultHeaders);
+#endif
   virtual void closeConnection();
   virtual bool isSecure();
 
@@ -47,7 +58,12 @@ protected:
 
 private:
   // SSL context for this connection
+#ifndef HTTPS_USE_MBEDTLS
   SSL * _ssl;
+#else
+  mbedtls_ssl_context _ssl;
+  mbedtls_net_context _client_fd;
+#endif
 
 };
 

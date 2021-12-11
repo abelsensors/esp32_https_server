@@ -65,6 +65,12 @@
 
 #endif // HTTPS_LOGLEVEL
 
+// use mbedtls instead of openssl
+#define HTTPS_USE_MBEDTLS
+#ifdef HTTPS_USE_MBEDTLS
+  #define HTTPS_USE_MBEDTLS_SSL_CACHE
+#endif
+
 // The following lines define limits of the protocol. Exceeding these limits will lead to a 500 error
 
 // Maximum of header lines that are parsed

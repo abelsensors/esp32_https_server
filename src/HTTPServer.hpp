@@ -63,7 +63,7 @@ protected:
   HTTPHeaders _defaultHeaders;
 
   // Setup functions
-  virtual uint8_t setupSocket();
+  virtual uint8_t setupSocket(int SocketID = -1);
   virtual void teardownSocket();
 
   // Helper functions

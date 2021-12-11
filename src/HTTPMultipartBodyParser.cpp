@@ -16,10 +16,7 @@ HTTPMultipartBodyParser::HTTPMultipartBodyParser(HTTPRequest * req):
   fieldFilename("")
 {
   auto contentType = _request->getHeader("Content-Type");
-#ifdef DEBUG_MULTIPART_PARSER      
-  Serial.print("Content type: ");
-  Serial.println(contentType.c_str());
-#endif
+  HTTPS_LOGD("Content type: %s", contentType.c_str());
   auto boundaryIndex = contentType.find("boundary=");
   if(boundaryIndex == std::string::npos) {
     HTTPS_LOGE("Multipart: missing boundary=");

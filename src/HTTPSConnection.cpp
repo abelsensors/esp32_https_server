@@ -13,6 +13,14 @@ HTTPSConnection::HTTPSConnection(ResourceResolver * resResolver):
 HTTPSConnection::~HTTPSConnection() {
   // Close the socket
   closeConnection();
+#ifdef HTTPS_USE_MBEDTLS
+  freeSSL();
+}
+
+void HTTPSConnection::freeSSL() {
+  mbedtls_ssl_free( &_ssl );
+  mbedtls_net_free( &_client_fd );
+#endif
 }
 
 bool HTTPSConnection::isSecure() {
@@ -77,7 +85,6 @@ int HTTPSConnection::initialize(mbedtls_net_context * server_fd, mbedtls_ssl_con
         }
 
         mbedtls_ssl_session_reset( &_ssl );
-        mbedtls_net_free( &_client_fd );
       }
     }
 #ifdef MBEDTLS_ERROR_C

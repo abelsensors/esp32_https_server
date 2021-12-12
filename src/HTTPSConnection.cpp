@@ -161,8 +161,6 @@ void HTTPSConnection::closeConnection() {
   }
 
   HTTPConnection::closeConnection();
-  mbedtls_ssl_free( &_ssl );
-  mbedtls_net_free( &_client_fd );
 #endif // MBEDTLS
 }
 

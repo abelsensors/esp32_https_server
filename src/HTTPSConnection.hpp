@@ -63,6 +63,7 @@ private:
 #else
   mbedtls_ssl_context _ssl;
   mbedtls_net_context _client_fd;
+  void freeSSL();
 #endif
 
 };

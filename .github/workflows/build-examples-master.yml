@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - mbedtls
 jobs:
   build-examples:
     strategy:

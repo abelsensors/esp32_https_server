@@ -16,8 +16,7 @@ static void dumpFrame(WebsocketFrame frame) {
     case WebsocketHandler::OPCODE_PONG: opcode = std::string("PONG"); break;
     case WebsocketHandler::OPCODE_TEXT: opcode = std::string("TEXT"); break;
   }
-  ESP_LOGI(
-    TAG,
+  HTTPS_LOGD(
     "Fin: %d, OpCode: %d (%s), Mask: %d, Len: %d",
     (int)frame.fin,
     (int)frame.opCode,

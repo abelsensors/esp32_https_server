@@ -53,10 +53,6 @@
 
 #else // __ARDUHAL_LOG_H__ - logging and level enabled from Arduino IDF
 
-#ifndef TAG
-  #define TAG "HTTPS"
-#endif // TAG
-
 #define HTTPS_LOGE(...)  log_e(__VA_ARGS__)
 #define HTTPS_LOGW(...)  log_w(__VA_ARGS__)
 #define HTTPS_LOGI(...)  log_i(__VA_ARGS__)

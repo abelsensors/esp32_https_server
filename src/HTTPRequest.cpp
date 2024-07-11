@@ -28,7 +28,7 @@ HTTPRequest::HTTPRequest(
 }
 
 HTTPRequest::~HTTPRequest() {
-  _headers->clearAll();
+  
 }
 
 
@@ -115,7 +115,7 @@ bool HTTPRequest::requestComplete() {
  */
 void HTTPRequest::discardRequestBody() {
   byte buf[16];
-  while(!requestComplete()) {
+  while (!requestComplete() && !_con->isClosed()) {
     readBytes(buf, 16);
   }
 }

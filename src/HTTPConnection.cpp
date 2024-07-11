@@ -548,7 +548,9 @@ void HTTPConnection::loop() {
                   // Refresh the timeout for the new request
                   refreshTimeout();
                   // Reset headers for the new connection
-                  _httpHeaders->clearAll();
+                  if (_httpHeaders != NULL) {
+                    _httpHeaders->clearAll();
+                  }
                   // Go back to initial state
                   _connectionState = STATE_INITIAL;
                 }
@@ -558,6 +560,9 @@ void HTTPConnection::loop() {
                 _connectionState = STATE_BODY_FINISHED;
               }
             }
+          }
+          if (_httpHeaders != NULL) {
+            _httpHeaders->clearAll();
           }
         } else {
           // No match (no default route configured, nothing does match)

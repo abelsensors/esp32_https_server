@@ -11,7 +11,7 @@ public:
   // From HTTPBodyParser
   HTTPURLEncodedBodyParser(HTTPRequest * req);
   ~HTTPURLEncodedBodyParser();
-  virtual bool nextField();
+  virtual int32_t nextField();
   virtual std::string getFieldName();
   virtual std::string getFieldFilename();
   virtual std::string getFieldMimeType();

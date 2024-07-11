@@ -10,7 +10,7 @@ class HTTPMultipartBodyParser : public HTTPBodyParser {
 public:
   HTTPMultipartBodyParser(HTTPRequest * req);
   ~HTTPMultipartBodyParser();
-  virtual bool nextField();
+  virtual int32_t nextField();
   virtual std::string getFieldName();
   virtual std::string getFieldFilename();
   virtual std::string getFieldMimeType();

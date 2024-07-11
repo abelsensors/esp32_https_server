@@ -73,14 +73,14 @@ HTTPURLEncodedBodyParser::~HTTPURLEncodedBodyParser() {
   bodyBuffer = NULL;
 }
 
-bool HTTPURLEncodedBodyParser::nextField() {
+int32_t HTTPURLEncodedBodyParser::nextField() {
   fieldBuffer = "";
   fieldPtr = NULL;
   fieldRemainingLength = 0;
 
   char *equalPtr = index(bodyPtr, '=');
   if (equalPtr == NULL) {
-    return false;
+    return 0;
   }
   fieldName = std::string(bodyPtr, equalPtr-bodyPtr);
   
@@ -96,7 +96,7 @@ bool HTTPURLEncodedBodyParser::nextField() {
   fieldBuffer = urlDecode(fieldBuffer);
   fieldRemainingLength = fieldBuffer.size();
   fieldPtr = fieldBuffer.c_str();
-  return true;
+  return 1;
 }
 
 std::string HTTPURLEncodedBodyParser::getFieldName() {

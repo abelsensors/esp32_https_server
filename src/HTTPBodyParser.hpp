@@ -26,12 +26,12 @@ public:
 
   /**
    * Proceeds to the next field of the body
-   * 
+   *
    * If a field has not been read completely, the remaining content is discarded.
-   * 
-   * Returns true iff proceeding to the next field succeeded (ie there was a next field)
+   *
+   * Returns 0: finished, 1: next field parsed, -1 error parsing the next field
    */
-  virtual bool nextField() = 0;
+  virtual int32_t nextField() = 0;
 
   /** Returns the name of the current field */
   virtual std::string getFieldName() = 0;

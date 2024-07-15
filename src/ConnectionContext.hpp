@@ -33,6 +33,8 @@ public:
   virtual void setWebsocketHandler(WebsocketHandler *wsHandler);
   virtual IPAddress getClientIP() = 0;
 
+  virtual bool isClosed() = 0;
+
   WebsocketHandler * _wsHandler;
 };
 

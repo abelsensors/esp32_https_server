@@ -167,13 +167,13 @@ bool HTTPMultipartBodyParser::peekBoundary() {
   return memcmp(ptr, boundary.c_str(), boundary.size()) == 0;
 }
 
-bool HTTPMultipartBodyParser::nextField() {
+int32_t HTTPMultipartBodyParser::nextField() {
   fillBuffer(MAXLINESIZE);
   while(!peekBoundary()) {
     std::string dummy = readLine();
     if (endOfBody()) {
       HTTPS_LOGE("Multipart missing last boundary");
-      return false;
+      return -1;
     }
     fillBuffer(MAXLINESIZE);
   }
@@ -181,11 +181,11 @@ bool HTTPMultipartBodyParser::nextField() {
   std::string line = readLine();
   if (line == lastBoundary) {
     discardBody();
-    return false;
+    return 0;
   }
   if (line != boundary) {
     HTTPS_LOGE("Multipart incorrect boundary");
-    return false;
+    return -1;
   }
   // Read header lines up to and including blank line
   fieldName = "";
@@ -220,7 +220,7 @@ bool HTTPMultipartBodyParser::nextField() {
         pos = field.find('=');
         if (pos == std::string::npos) {
           HTTPS_LOGE("Multipart ill-formed form-data header");
-          return false;
+          return -1;
         }
         std::string headerName = field.substr(0, pos);
         std::string headerValue = field.substr(pos+1);
@@ -238,9 +238,9 @@ bool HTTPMultipartBodyParser::nextField() {
   }
   if (fieldName == "") {
     HTTPS_LOGE("Multipart missing name");
-    return false;
+    return -1;
   }
-  return true;
+  return 1;
 }
 
 std::string HTTPMultipartBodyParser::getFieldName() {

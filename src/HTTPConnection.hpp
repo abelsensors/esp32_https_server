@@ -46,7 +46,7 @@ public:
   virtual IPAddress getClientIP();
 
   void loop();
-  bool isClosed();
+  bool isClosed() override;
   bool isError();
 
 protected:

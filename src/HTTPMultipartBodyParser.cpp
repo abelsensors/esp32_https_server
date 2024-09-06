@@ -169,10 +169,14 @@ bool HTTPMultipartBodyParser::peekBoundary() {
 
 int32_t HTTPMultipartBodyParser::nextField() {
   fillBuffer(MAXLINESIZE);
-  while(!peekBoundary()) {
+  while (!peekBoundary()) {
+    if (peekBufferSize == 0) {
+      HTTPS_LOGE("Multipart missing last boundary1");
+      return -1;
+    }
     std::string dummy = readLine();
     if (endOfBody()) {
-      HTTPS_LOGE("Multipart missing last boundary");
+      HTTPS_LOGE("Multipart missing last boundary2");
       return -1;
     }
     fillBuffer(MAXLINESIZE);

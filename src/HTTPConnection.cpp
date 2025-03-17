@@ -211,8 +211,14 @@ int HTTPConnection::updateBuffer() {
           closeConnection();
           return -1;
         }
-
-      } // data pending
+      // This function can be called in a loop when discarding the request body in HTTPRequest::discardRequestBody. 
+      // When the connection for whatever reason is unable to receive more data, the application essentially gets  
+      // stuck in an infinite while loop. This extra timeout check prevents this from occurring.
+      } else if (isTimeoutExceeded()) {
+        HTTPS_LOGI("Connection timeout. FID=%d", _socket);
+        closeConnection();
+        return -1;
+      }
 
     } // buffer can read more
   }

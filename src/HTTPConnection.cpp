@@ -177,9 +177,6 @@ int HTTPConnection::updateBuffer() {
 
     if (_bufferUnusedIdx < HTTPS_CONNECTION_DATA_CHUNK_SIZE) {
       if (canReadData()) {
-
-        HTTPS_LOGD("Data on Socket FID=%d", _socket);
-
         int readReturnCode;
 
         // The return code of SSL_read means:

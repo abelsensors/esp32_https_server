@@ -20,7 +20,7 @@ HTTPMultipartBodyParser::HTTPMultipartBodyParser(HTTPRequest * req):
   auto boundaryIndex = contentType.find("boundary=");
   if(boundaryIndex == std::string::npos) {
     HTTPS_LOGE("Multipart: missing boundary=");
-    discardBody();
+    resetBuffer();
     return;
   }
   boundary = contentType.substr(boundaryIndex + 9); // "boundary="
@@ -28,7 +28,7 @@ HTTPMultipartBodyParser::HTTPMultipartBodyParser(HTTPRequest * req):
   boundary = "--" + boundary.substr(0, commaIndex);
   if(boundary.size() > 72) {
     HTTPS_LOGE("Multipart: boundary string too long");
-    discardBody();
+    resetBuffer();
   }
   lastBoundary = boundary + "--";
 }
@@ -40,13 +40,12 @@ HTTPMultipartBodyParser::~HTTPMultipartBodyParser() {
   }
 }
 
-void HTTPMultipartBodyParser::discardBody() {
+void HTTPMultipartBodyParser::resetBuffer() {
   if (peekBuffer) {
     free(peekBuffer);
   }
   peekBuffer = NULL;
   peekBufferSize = 0;
-  _request->discardRequestBody();
 }
 
 bool HTTPMultipartBodyParser::endOfBody() {
@@ -65,7 +64,7 @@ void HTTPMultipartBodyParser::fillBuffer(size_t maxLen) {
     peekBuffer = (char *)malloc(maxLen);
     if (peekBuffer == NULL) {
       HTTPS_LOGE("Multipart: out of memory");
-      discardBody();
+      resetBuffer();
       return;
     }
     bufPtr = peekBuffer;
@@ -75,7 +74,7 @@ void HTTPMultipartBodyParser::fillBuffer(size_t maxLen) {
     char *newPeekBuffer = (char *)realloc(peekBuffer, maxLen);
     if (newPeekBuffer == NULL) {
       HTTPS_LOGE("Multipart: out of memory");
-      discardBody();
+      resetBuffer();
       return;
     }
     peekBuffer = newPeekBuffer;
@@ -127,7 +126,7 @@ bool HTTPMultipartBodyParser::skipCRLF() {
   }
   if (peekBuffer[1] != '\n') {
     HTTPS_LOGE("Multipart incorrect line terminator");
-    discardBody();
+    resetBuffer();
     return false;
   }
   consumedBuffer(2);
@@ -142,7 +141,7 @@ std::string HTTPMultipartBodyParser::readLine() {
   char *crPtr = (char *)memchr(peekBuffer, '\r', peekBufferSize);
   if (crPtr == NULL) {
     HTTPS_LOGE("Multipart line too long");
-    discardBody();
+    resetBuffer();
     return "";
   }
   size_t lineLength = crPtr-peekBuffer;
@@ -184,7 +183,7 @@ int32_t HTTPMultipartBodyParser::nextField() {
   skipCRLF();
   std::string line = readLine();
   if (line == lastBoundary) {
-    discardBody();
+    resetBuffer();
     return 0;
   }
   if (line != boundary) {

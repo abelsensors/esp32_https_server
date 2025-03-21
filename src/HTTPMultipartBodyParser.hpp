@@ -22,7 +22,7 @@ private:
   void consumedBuffer(size_t consumed);
   bool skipCRLF();
   bool peekBoundary();
-  void discardBody();
+  void resetBuffer();
   bool endOfBody();
   char *peekBuffer;
   size_t peekBufferSize;

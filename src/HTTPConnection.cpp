@@ -177,9 +177,6 @@ int HTTPConnection::updateBuffer() {
 
     if (_bufferUnusedIdx < HTTPS_CONNECTION_DATA_CHUNK_SIZE) {
       if (canReadData()) {
-
-        HTTPS_LOGD("Data on Socket FID=%d", _socket);
-
         int readReturnCode;
 
         // The return code of SSL_read means:
@@ -515,9 +512,10 @@ void HTTPConnection::loop() {
           next();
 
           // The callback-function should have read all of the request body.
-          // However, if it does not, we need to clear the request body now,
-          // because otherwise it would be parsed in the next request.
-          if (!req.requestComplete()) {
+          // However, if it does not and we want to reuse the connection, we
+          // need to clear the request body now, because otherwise it would
+          // be parsed in the next request.
+          if (!req.requestComplete() && _isKeepAlive) {
             HTTPS_LOGW("Callback function did not parse full request body");
             req.discardRequestBody();
           }

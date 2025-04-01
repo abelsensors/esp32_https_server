@@ -172,7 +172,6 @@ int HTTPConnection::updateBuffer() {
       }
       _bufferUnusedIdx -= _bufferProcessed;
       _bufferProcessed = 0;
-
     }
 
     if (_bufferUnusedIdx < HTTPS_CONNECTION_DATA_CHUNK_SIZE) {
@@ -198,7 +197,7 @@ int HTTPConnection::updateBuffer() {
         } else if (readReturnCode == 0) {
           // The connection has been closed by the client
           _clientState = CSTATE_CLOSED;
-          HTTPS_LOGI("Client closed connection, FID=%d", _socket);
+          HTTPS_LOGW("Client closed connection, FID=%d", _socket);
           // TODO: If we are in state websocket, we might need to do something here
           return 0;
         } else {
@@ -212,7 +211,7 @@ int HTTPConnection::updateBuffer() {
       // When the connection for whatever reason is unable to receive more data, the application essentially gets  
       // stuck in an infinite while loop. This extra timeout check prevents this from occurring.
       } else if (isTimeoutExceeded()) {
-        HTTPS_LOGI("Connection timeout. FID=%d", _socket);
+        HTTPS_LOGW("Connection timeout. FID=%d", _socket);
         closeConnection();
         return -1;
       }
@@ -229,7 +228,7 @@ bool HTTPConnection::canReadData() {
 
   // We define an immediate timeout (return immediately, if there's no data)
   timeval timeout;
-  timeout.tv_sec  = 0;
+  timeout.tv_sec = 1;
   timeout.tv_usec = 0;
 
   // Check for input

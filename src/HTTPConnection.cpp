@@ -226,10 +226,10 @@ bool HTTPConnection::canReadData() {
   FD_ZERO( &sockfds );
   FD_SET(_socket, &sockfds);
 
-  // We define an immediate timeout (return immediately, if there's no data)
+  // Wait up to 250 ms for data to be available before returning false
   timeval timeout;
-  timeout.tv_sec = 1;
-  timeout.tv_usec = 0;
+  timeout.tv_sec = 0;
+  timeout.tv_usec = 250000;
 
   // Check for input
   // As by 2017-12-14, it seems that FD_SETSIZE is defined as 0x40, but socket IDs now
